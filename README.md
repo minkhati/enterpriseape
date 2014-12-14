@@ -22,4 +22,4 @@ Feel free to access [My Portfolio](ca.linkedin.com/in/minkhati/).
 2. Precision
 3. Performance
 
-This is what a ruby on rails code look like `puts 'Hello World !'`
+This is what a **ruby on rails** code look like `puts 'Hello World !'`

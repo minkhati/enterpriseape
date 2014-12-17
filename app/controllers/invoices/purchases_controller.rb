@@ -1,5 +1,5 @@
-class PurchasesController < ApplicationController
-  before_action :set_purchase, only: [:show, :edit, :update, :destroy]
+class Invoices::PurchasesController < ApplicationController
+  #before_action :set_purchase, only: [:show, :edit, :update, :destroy]
 
   def index
     @purchases = Purchase.all
@@ -11,22 +11,25 @@ class PurchasesController < ApplicationController
   end
 
   def new
+    @invoice = Invoice.find(params[:invoice_id])
     @purchase = Purchase.new
-    #respond_with(@purchase)
   end
 
   def edit
   end
 
   def create
+    @invoice = Invoice.find(params[:invoice_id])
     @purchase = Purchase.new(purchase_params)
+    @purchase.invoice = @invoice
+    
     respond_to do |format|
       if @purchase.save 
-        format.html { redirect_to @purchase, notice: 'Purchase was sucessfully created.' }
-        format.json { render action: 'show', status: :created, location: @purchase }
+        format.html { redirect_to @invoice, notice: 'Purchase was sucessfully created.' }
+        format.json { render action: 'show', status: :created, location: @invoice }
       else
         format.html { render action: 'new' }
-        format.json { render json: @purchase.errors, status: :unprocessable_entity }
+        format.json { render json: @invoice.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -44,10 +47,16 @@ class PurchasesController < ApplicationController
   end
 
   def destroy
-    @purchase.destroy
-    respond_to do |format|
-      format.html { redirect_to purchases_url }
-      format.json { head :no_content }
+    @invoice = Invoice.find(params[:invoice_id])
+    @purchase = Purchase.find(params[:id])
+    title = @purchase.name
+    
+    if @purchase.destroy
+      flash[:notice] = "'#{title}' was deleted successfully."
+      redirect_to @invoice
+    else
+      flash[:error] = "There was an error deleteing the purchase."
+      render :show
     end
   end
 
